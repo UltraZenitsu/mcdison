@@ -2,7 +2,7 @@
   "name": "McDison Fast Food",
   "short_name": "McDison",
   "description": "Las mejores hamburguesas de San Juan",
-  "start_url": "mcdison-2.html",
+  "start_url": "index.html",
   "display": "standalone",
   "background_color": "#0D0D0D",
   "theme_color": "#CC1B1B",
