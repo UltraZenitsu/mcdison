@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>McDison Fast Food</title>
+<link rel="manifest" href="manifest.json">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;600;700;900&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--red:#CC1B1B;--red2:#A81515;--yellow:#F5C518;--dark:#0D0D0D;--dark2:#161616;--dark3:#1F1F1F;--dark4:#2A2A2A;--white:#FFF;--gray:#888;--gray2:#555}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html{scroll-behavior:smooth}
+body{background:var(--dark);color:var(--white);font-family:'Barlow',sans-serif;overflow-x:hidden;max-width:480px;margin:0 auto}
+
+/* ===== HERO ===== */
+.hero-top{background:linear-gradient(180deg,#1a0000 0%,var(--red) 45%,var(--red2) 100%);padding:32px 20px 24px;text-align:center;position:relative;overflow:hidden}
+.hero-top::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(45deg,rgba(0,0,0,.06) 0,rgba(0,0,0,.06) 2px,transparent 2px,transparent 14px);pointer-events:none}
+.hero-burger-icon{font-size:72px;line-height:1;position:relative;z-index:1;filter:drop-shadow(0 4px 12px rgba(0,0,0,.5));animation:float 3s ease-in-out infinite}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+.hero-name{font-family:'Bebas Neue',cursive;font-size:66px;letter-spacing:5px;color:var(--yellow);line-height:1;position:relative;z-index:1;text-shadow:4px 4px 0 rgba(0,0,0,.5),2px 2px 0 var(--red2)}
+.hero-sub{font-family:'Barlow Condensed',sans-serif;font-size:12px;letter-spacing:6px;color:rgba(255,255,255,.7);text-transform:uppercase;margin-top:5px;position:relative;z-index:1}
+.hero-tag{margin-top:14px;display:inline-block;background:var(--yellow);color:var(--dark);font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:900;letter-spacing:3px;text-transform:uppercase;padding:6px 18px;border-radius:20px;position:relative;z-index:1;box-shadow:0 3px 12px rgba(0,0,0,.3)}
+
+/* ===== ACTION BUTTONS ===== */
+.hero-actions{display:flex;gap:10px;padding:14px 14px 16px;background:var(--dark2)}
+.ha-btn{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:14px 6px;border-radius:16px;text-decoration:none;font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;border:none;cursor:pointer;transition:opacity .15s,transform .15s}
+.ha-btn:active{transform:scale(.93);opacity:.8}
+.ha-btn svg{width:22px;height:22px}
+.ha-wa{background:#25D366;color:#fff;box-shadow:0 3px 12px rgba(37,211,102,.3)}
+.ha-ig{background:linear-gradient(135deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888);color:#fff;box-shadow:0 3px 12px rgba(220,39,67,.25)}
+.ha-map{background:var(--yellow);color:var(--dark);box-shadow:0 3px 12px rgba(245,197,24,.3)}
+
+/* ===== NAV ===== */
+.sticky-nav{position:sticky;top:0;z-index:100;background:var(--dark2);border-bottom:2px solid var(--red);overflow-x:auto;scrollbar-width:none}
+.sticky-nav::-webkit-scrollbar{display:none}
+.nav-inner{display:flex;padding:0 4px;min-width:max-content}
+.nav-btn{padding:13px 18px;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--gray);background:none;border:none;cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px;white-space:nowrap;transition:color .2s,border-color .2s}
+.nav-btn.active,.nav-btn:active{color:var(--yellow);border-bottom-color:var(--yellow)}
+
+/* ===== SECTION ===== */
+.section{padding:22px 14px}
+.section-header{display:flex;align-items:center;gap:12px;margin-bottom:16px}
+.section-title{font-family:'Bebas Neue',cursive;font-size:34px;letter-spacing:2px;color:var(--yellow);text-shadow:2px 2px 0 var(--red);line-height:1}
+.section-line{flex:1;height:2px;background:linear-gradient(90deg,var(--red),transparent)}
+
+/* ===== ITEM CARD ===== */
+.item-card{background:var(--dark3);border-radius:16px;margin-bottom:12px;overflow:hidden;border:1px solid rgba(255,255,255,.06);transition:border-color .2s}
+.item-card.expanded{border-color:rgba(204,27,27,.6)}
+.item-top{display:flex;align-items:center;padding:13px 13px 11px;gap:11px}
+.item-emoji{width:52px;height:52px;background:linear-gradient(135deg,var(--red),#6b0000);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0;box-shadow:0 3px 10px rgba(0,0,0,.4)}
+.item-info{flex:1;min-width:0}
+.item-name{font-family:'Barlow Condensed',sans-serif;font-size:21px;font-weight:900;color:var(--white);line-height:1.1;display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+.item-badge{font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;background:var(--yellow);color:var(--dark);padding:2px 7px;border-radius:4px;flex-shrink:0}
+.item-price-row{display:flex;gap:12px;align-items:baseline;margin-top:5px;flex-wrap:wrap}
+.price-tag{display:flex;flex-direction:column}
+.price-lbl{font-size:9px;color:var(--gray);letter-spacing:1px;text-transform:uppercase;font-family:'Barlow Condensed',sans-serif}
+.price-val{font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:700;color:var(--yellow);line-height:1}
+.price-val.d{color:#e8a000;font-size:17px}
+.expand-btn{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:8px;color:var(--gray);font-size:11px;font-family:'Barlow Condensed',sans-serif;letter-spacing:1px;padding:7px 10px;cursor:pointer;display:flex;align-items:center;gap:4px;flex-shrink:0;text-transform:uppercase;font-weight:700}
+.chev{transition:transform .25s;display:inline-block;font-style:normal}
+.item-card.expanded .chev{transform:rotate(180deg)}
+
+/* ===== DESC PANEL ===== */
+.item-desc{max-height:0;overflow:hidden;transition:max-height .35s ease}
+.item-desc.open{max-height:260px}
+.item-desc-inner{padding:12px 14px;border-top:1px solid rgba(255,255,255,.05);background:rgba(0,0,0,.2)}
+
+/* Star rating inside desc */
+.desc-rating{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.desc-stars{color:var(--yellow);font-size:16px;letter-spacing:1px}
+.desc-tag{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--yellow);background:rgba(245,197,24,.1);border:1px solid rgba(245,197,24,.25);border-radius:5px;padding:2px 8px}
+.desc-phrase{font-size:13px;color:rgba(255,255,255,.75);font-style:italic;line-height:1.5;margin-bottom:8px}
+.ingr{font-size:12px;color:var(--gray2);line-height:1.6}
+.ingr strong{color:rgba(255,255,255,.4);font-weight:600}
+
+/* ===== ITEM ACTIONS ===== */
+.item-actions{display:flex;align-items:center;gap:8px;padding:0 13px 13px}
+.qty-ctrl{display:flex;align-items:center;background:var(--dark4);border-radius:10px;overflow:hidden;border:1px solid rgba(255,255,255,.1);flex-shrink:0}
+.qty-btn{width:32px;height:36px;background:none;border:none;color:#fff;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.qty-btn:active{background:rgba(255,255,255,.1)}
+.qty-val{width:32px;height:36px;text-align:center;background:transparent;border:none;border-left:1px solid rgba(255,255,255,.08);border-right:1px solid rgba(255,255,255,.08);color:#fff;font-family:'Barlow Condensed',sans-serif;font-size:17px;font-weight:700}
+.btn-cart{flex:1;height:36px;background:var(--dark4);border:1px solid rgba(255,255,255,.12);border-radius:10px;color:#fff;font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:5px}
+.btn-cart:active{background:rgba(255,255,255,.1)}
+.btn-pedir{flex:1.5;height:36px;background:#25D366;border:none;border-radius:10px;color:#fff;font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:5px;text-decoration:none}
+.btn-pedir:active{filter:brightness(.85)}
+
+/* ===== EXTRAS ===== */
+.bg-alt{background:rgba(255,255,255,.012)}
+.extra-item{background:var(--dark3);border-radius:12px;padding:12px 13px;margin-bottom:10px;border:1px solid rgba(255,255,255,.06);display:flex;align-items:center;gap:11px}
+.extra-icon{font-size:26px;width:38px;text-align:center;flex-shrink:0}
+.extra-txt{flex:1}
+.extra-name{font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:700}
+.extra-price{font-family:'Barlow Condensed',sans-serif;font-size:15px;color:var(--yellow);font-weight:600;margin-top:1px}
+.extra-right{display:flex;align-items:center;gap:6px}
+.btn-cart-sm{width:38px;height:36px;background:var(--dark4);border:1px solid rgba(255,255,255,.12);border-radius:10px;color:#fff;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.btn-cart-sm:active{background:rgba(255,255,255,.1)}
+
+/* ===== REVIEWS SCROLL ===== */
+.reviews-section{padding:0 0 8px;overflow:hidden}
+.reviews-track-wrap{overflow:hidden;position:relative}
+.reviews-track{display:flex;gap:12px;width:max-content;animation:scrollReviews 32s linear infinite}
+.reviews-track:hover{animation-play-state:paused}
+@keyframes scrollReviews{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+.review-card{background:var(--dark3);border:1px solid rgba(255,255,255,.07);border-radius:14px;padding:16px;width:270px;flex-shrink:0}
+.rv-header{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.rv-avatar{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:900;flex-shrink:0;color:#fff}
+.rv-name{font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:700;line-height:1.1}
+.rv-date{font-size:11px;color:var(--gray);margin-top:1px}
+.rv-stars{color:var(--yellow);font-size:14px;letter-spacing:1px;margin-bottom:6px}
+.rv-text{font-size:13px;color:rgba(255,255,255,.8);line-height:1.5}
+.rv-scores{font-size:11px;color:var(--gray);margin-top:6px;font-family:'Barlow Condensed',sans-serif;letter-spacing:.5px}
+
+/* ===== CONTACT ===== */
+.contact-card{background:var(--dark3);border-radius:16px;padding:16px;margin-bottom:12px;border:1px solid rgba(255,255,255,.06);display:flex;align-items:center;gap:14px;text-decoration:none;transition:transform .15s}
+.contact-card:active{transform:scale(.97)}
+.contact-card.wa{border-left:4px solid #25D366}
+.contact-card.ig{border-left:4px solid #dc2743}
+.contact-card.mp{border-left:4px solid var(--yellow)}
+.cc-icon{font-size:34px;flex-shrink:0}
+.cc-info{flex:1}
+.cc-title{font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:700;color:#fff}
+.cc-sub{font-size:12px;color:var(--gray);margin-top:2px;line-height:1.4}
+.cc-arr{font-size:22px;color:var(--gray2)}
+
+/* ===== FOOTER ===== */
+footer{background:#0a0a0a;border-top:2px solid var(--red);padding:32px 20px 100px;text-align:center}
+.ft-name{font-family:'Bebas Neue',cursive;font-size:42px;color:var(--yellow);letter-spacing:3px;text-shadow:3px 3px 0 var(--red)}
+.ft-sub{font-family:'Barlow Condensed',sans-serif;font-size:11px;letter-spacing:3px;color:var(--gray);text-transform:uppercase;margin-top:4px}
+.ft-stars{color:var(--yellow);font-size:14px;letter-spacing:3px;margin-top:5px}
+.ft-copy{margin-top:18px;color:var(--gray2);font-size:11px}
+
+/* ===== CART FAB ===== */
+.cart-float{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);z-index:200;width:calc(100% - 24px);max-width:456px;display:none}
+.cart-fab{width:100%;background:linear-gradient(90deg,var(--red),#9b0e0e);color:#fff;border:none;border-radius:50px;padding:14px 22px;font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:700;letter-spacing:2px;text-transform:uppercase;cursor:pointer;display:flex;align-items:center;justify-content:space-between;box-shadow:0 6px 24px rgba(0,0,0,.5),0 2px 8px rgba(204,27,27,.4)}
+.cart-fab:active{filter:brightness(.85)}
+.cart-fab-l{display:flex;align-items:center;gap:10px}
+.cart-cnt{background:var(--yellow);color:var(--dark);border-radius:50%;width:26px;height:26px;font-size:13px;display:flex;align-items:center;justify-content:center;font-weight:900}
+.cart-fab-tot{font-size:17px;font-weight:900;color:var(--yellow)}
+
+/* ===== CART DRAWER ===== */
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:250;display:none;backdrop-filter:blur(3px)}
+.overlay.show{display:block}
+.cart-drawer{position:fixed;bottom:0;left:50%;transform:translateX(-50%) translateY(110%);width:100%;max-width:480px;max-height:88vh;background:var(--dark2);border-radius:24px 24px 0 0;border-top:3px solid var(--red);z-index:300;display:flex;flex-direction:column;transition:transform .38s cubic-bezier(.32,0,.15,1)}
+.cart-drawer.open{transform:translateX(-50%) translateY(0)}
+.cart-handle{width:40px;height:4px;background:rgba(255,255,255,.15);border-radius:2px;margin:12px auto 0}
+.cart-hdr{padding:14px 18px;border-bottom:1px solid rgba(255,255,255,.06);display:flex;align-items:center;justify-content:space-between}
+.cart-ttl{font-family:'Bebas Neue',cursive;font-size:26px;color:var(--yellow);letter-spacing:2px}
+.cart-cls{background:rgba(255,255,255,.08);border:none;color:#fff;width:30px;height:30px;border-radius:50%;font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.cart-items-wrap{flex:1;overflow-y:auto;padding:12px 14px;display:flex;flex-direction:column;gap:9px}
+.cart-item-row{background:var(--dark3);border-radius:11px;padding:11px 13px;display:flex;align-items:center;gap:10px;border:1px solid rgba(255,255,255,.05)}
+.ci-em{font-size:26px;flex-shrink:0}
+.ci-inf{flex:1;min-width:0}
+.ci-nm{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:16px;line-height:1.1}
+.ci-qt{font-size:12px;color:var(--gray);margin-top:2px}
+.ci-pr{font-family:'Barlow Condensed',sans-serif;font-size:17px;color:var(--yellow);font-weight:700;white-space:nowrap}
+.ci-rm{background:none;border:none;color:var(--gray2);font-size:18px;cursor:pointer;padding:4px;flex-shrink:0}
+.cart-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;color:var(--gray);gap:9px;padding:40px 0}
+.cart-empty-ico{font-size:52px;opacity:.2}
+.cart-ftr{padding:14px;border-top:1px solid rgba(255,255,255,.06);display:flex;flex-direction:column;gap:11px;padding-bottom:calc(14px + env(safe-area-inset-bottom,0px))}
+.cart-tot{display:flex;justify-content:space-between;font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:700}
+.cart-tot span:last-child{color:var(--yellow)}
+.cart-send{background:#25D366;color:#fff;border:none;border-radius:13px;padding:15px;font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;letter-spacing:2px;text-transform:uppercase;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:9px}
+.cart-send:active{filter:brightness(.85)}
+.cart-clear{background:transparent;color:var(--gray);border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:9px;font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;text-align:center}
+
+/* ===== TOAST ===== */
+.toast{position:fixed;top:68px;left:50%;transform:translateX(-50%) translateY(-20px);background:var(--dark3);color:#fff;padding:10px 18px;border-radius:50px;font-family:'Barlow Condensed',sans-serif;font-size:14px;letter-spacing:1px;border:1px solid var(--yellow);z-index:500;opacity:0;transition:all .3s;white-space:nowrap;pointer-events:none}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* ===== REVIEWS SECTION HEADER ===== */
+.reviews-intro{padding:22px 14px 10px}
+</style>
+</head>
+<body>
+
+<!-- ===== HERO ===== -->
+<div class="hero-top">
+  <div class="hero-burger-icon">🍔</div>
+  <h1 class="hero-name">McDison</h1>
+  <p class="hero-sub">Fast Food · San Juan, Argentina</p>
+  <span class="hero-tag">⭐ Todas las órdenes incluyen papas ⭐</span>
+</div>
+
+<!-- ===== ACTION BUTTONS ===== -->
+<div class="hero-actions">
+  <a href="https://wa.me/5492645232147?text=Hola%20McDison!%20Quiero%20hacer%20un%20pedido%20%F0%9F%94%A5" target="_blank" class="ha-btn ha-wa">
+    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+    WhatsApp
+  </a>
+  <a href="https://www.instagram.com/madisonfastfood?igsh=a3E2em9veXh2cGc0" target="_blank" class="ha-btn ha-ig">
+    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+    Instagram
+  </a>
+  <a href="https://maps.app.goo.gl/HsZa9PbkBVe3DTFd9" target="_blank" class="ha-btn ha-map">
+    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+    Ubicación
+  </a>
+</div>
+
+<!-- ===== NAV ===== -->
+<nav class="sticky-nav">
+  <div class="nav-inner">
+    <button class="nav-btn active" onclick="goTo('burgers',this)">🍔 Hamburguesas</button>
+    <button class="nav-btn" onclick="goTo('postres',this)">🍫 Postres</button>
+    <button class="nav-btn" onclick="goTo('extras',this)">➕ Extras</button>
+    <button class="nav-btn" onclick="goTo('opiniones',this)">⭐ Opiniones</button>
+    <button class="nav-btn" onclick="goTo('contacto',this)">📞 Contacto</button>
+  </div>
+</nav>
+
+<!-- ===== HAMBURGUESAS ===== -->
+<div id="burgers">
+<div class="section">
+  <div class="section-header"><h2 class="section-title">Hamburguesas</h2><div class="section-line"></div></div>
+  <div id="burger-list"></div>
+</div>
+</div>
+
+<!-- ===== POSTRES ===== -->
+<div class="bg-alt" id="postres">
+<div class="section">
+  <div class="section-header"><h2 class="section-title">Postres</h2><div class="section-line"></div></div>
+  <div id="postre-list"></div>
+</div>
+</div>
+
+<!-- ===== EXTRAS ===== -->
+<div id="extras">
+<div class="section">
+  <div class="section-header"><h2 class="section-title">Extras</h2><div class="section-line"></div></div>
+  <div id="extras-list"></div>
+</div>
+</div>
+
+<!-- ===== OPINIONES ===== -->
+<div class="bg-alt" id="opiniones">
+  <div class="reviews-intro">
+    <div class="section-header"><h2 class="section-title">Lo que dicen</h2><div class="section-line"></div></div>
+  </div>
+  <div class="reviews-track-wrap" style="padding:0 0 24px">
+    <div class="reviews-track" id="reviewsTrack"></div>
+  </div>
+</div>
+
+<!-- ===== CONTACTO ===== -->
+<div id="contacto">
+<div class="section">
+  <div class="section-header"><h2 class="section-title">Contacto</h2><div class="section-line"></div></div>
+  <a href="https://wa.me/5492645232147?text=Hola%20McDison!%20Quiero%20hacer%20un%20pedido%20%F0%9F%94%A5" target="_blank" class="contact-card wa">
+    <div class="cc-icon">💬</div>
+    <div class="cc-info"><div class="cc-title" style="color:#25D366">WhatsApp</div><div class="cc-sub">+54 9 264 523-2147 · Pedidos y consultas</div></div>
+    <div class="cc-arr">›</div>
+  </a>
+  <a href="https://www.instagram.com/madisonfastfood?igsh=a3E2em9veXh2cGc0" target="_blank" class="contact-card ig">
+    <div class="cc-icon">📸</div>
+    <div class="cc-info"><div class="cc-title" style="background:linear-gradient(135deg,#f09433,#dc2743,#bc1888);-webkit-background-clip:text;-webkit-text-fill-color:transparent">Instagram</div><div class="cc-sub">@madisonfastfood · 6.813 seguidores</div></div>
+    <div class="cc-arr">›</div>
+  </a>
+  <a href="https://maps.app.goo.gl/HsZa9PbkBVe3DTFd9" target="_blank" class="contact-card mp">
+    <div class="cc-icon">📍</div>
+    <div class="cc-info"><div class="cc-title" style="color:var(--yellow)">Cómo llegar</div><div class="cc-sub">Sgo. Ramón y Cajal 117 · San Juan, ARG · Ver en Google Maps →</div></div>
+    <div class="cc-arr">›</div>
+  </a>
+</div>
+</div>
+
+<!-- ===== FOOTER ===== -->
+<footer>
+  <div class="ft-name">McDison</div>
+  <div class="ft-sub">Madison Fast Food · Est. 2025</div>
+  <div class="ft-stars">★★★★★</div>
+  <p class="ft-copy">© 2025 McDison Fast Food · San Juan, Argentina</p>
+</footer>
+
+<!-- ===== CART FAB ===== -->
+<div class="cart-float" id="cartFloat">
+  <button class="cart-fab" onclick="openCart()">
+    <div class="cart-fab-l"><span class="cart-cnt" id="cartCnt">0</span><span>Ver pedido</span></div>
+    <span class="cart-fab-tot" id="cartFabTot">$0</span>
+  </button>
+</div>
+
+<!-- ===== OVERLAY ===== -->
+<div class="overlay" id="overlay" onclick="closeCart()"></div>
+
+<!-- ===== CART DRAWER ===== -->
+<div class="cart-drawer" id="cartDrawer">
+  <div class="cart-handle"></div>
+  <div class="cart-hdr">
+    <span class="cart-ttl">Tu Pedido 🍔</span>
+    <button class="cart-cls" onclick="closeCart()">✕</button>
+  </div>
+  <div class="cart-items-wrap" id="cartItemsWrap"></div>
+  <div class="cart-ftr" id="cartFtr" style="display:none">
+    <div class="cart-tot"><span>Total estimado</span><span id="cartTotDisplay">$0</span></div>
+    <button class="cart-send" onclick="sendWA()">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+      Enviar pedido por WhatsApp
+    </button>
+    <button class="cart-clear" onclick="clearCart()">Vaciar carrito</button>
+  </div>
+</div>
+
+<!-- ===== TOAST ===== -->
+<div class="toast" id="toastEl"></div>
+
+<script>
+// ====================================================================
+// DATA
+// ====================================================================
+var WA_NUM = '5492645232147';
+
+var BURGERS = [
+  {id:'falsamc', em:'🍔', name:'Falsa MC', badge:'Popular', stars:5, tag:'La más pedida', phrase:'La que siempre vuelven a buscar. Clásica, jugosa y sin complicaciones.', s:9300, d:9900, ing:'Pan con puré de papa en la masa · Blend de carne 150gr · Ketchup · Cebolla picada · Cheddar'},
+  {id:'mcdison', em:'🍔', name:'McDison', badge:null, stars:5, tag:'Nuestra firma', phrase:'La hamburguesa que nos define. Se quedan sin palabras en el primer mordisco.', s:9900, d:10900, ing:'Pan con puré de papa en la masa · Blend de carne 150gr · Cheddar · Huevo · Bacon · Barbacoa · Salsa Tasty'},
+  {id:'turbo',  em:'🔥', name:'Turbo McDison', badge:'Turbo', stars:5, tag:'La favorita', phrase:'Para los que quieren todo. Jamón, tomate, lechuga y esa salsa Tasty que engancha.', s:9900, d:10900, ing:'Pan con puré de papa en la masa · Blend de carne 150gr · Queso Tybo · Jamón cocido · Tomate · Lechuga · Salsa Tasty'},
+  {id:'big',    em:'🍔', name:'Big McDison', badge:null, stars:5, tag:'Siempre vuelven', phrase:'La cebolla caramelizada lo cambia todo. Una vez que la probás, no hay vuelta atrás.', s:9900, d:10900, ing:'Pan con puré de papa en la masa · Blend de carne 150gr · Cheddar · Cebolla caramelizada · Bacon · Barbacoa · Salsa Tasty'},
+  {id:'falsabig',em:'🍔', name:'Falsa Big', badge:null, stars:4, tag:'Top del menú', phrase:'El combo perfecto entre lo grande y lo sabroso. Difícil elegir solo una.', s:9900, d:10900, ing:'Pan con puré de papa en la masa · Blend de carne 150gr · Cheddar · Bacon · Lechuga · Salsa Big'},
+  {id:'grand',  em:'🏆', name:'Grand McDison', badge:'Grande', stars:5, tag:'El gran jefe', phrase:'Doble medallón, salsa mil islas y toda la potencia del sabor McDison.', s:null, d:11499, ing:'Pan con puré de papa en la masa · Blend de carne 150gr x2 · Salsa mil islas · Pepino · Cebolla morada · Lechuga · Tomate · Cheddar · Bacon'},
+  {id:'square', em:'⭐', name:'Square Garden', badge:'Especial', stars:5, tag:'Fuera de serie', phrase:'Con salsa 4 quesos y barbacoa, esta hamburgesa juega en otra liga.', s:10900, d:12099, ing:'Pan con puré de papa en la masa · Blend de carne 150gr · Salsa 4 quesos · Bacon · Lechuga · Tomate · Barbacoa · Salsa mil islas'},
+  {id:'tucson', em:'🌶️', name:'Tucson', badge:null, stars:4, tag:'La atrevida', phrase:'Guacamole y Salsa Tasty que te hacen cerrar los ojos. Una explosión de sabor.', s:10900, d:12099, ing:'Pan con puré de papa en la masa · Blend de carne 150gr · Cheddar · Guacamole · Huevo · Cebolla · Bacon · Salsa Tasty'},
+  {id:'cheese', em:'🧀', name:'Cheese', badge:null, stars:4, tag:'Para los queseros', phrase:'Seis capas de cheddar que se derriten en cada mordisco. Simplemente irresistible.', s:9900, d:10499, ing:'Pan con puré de papa en la masa · Blend de carne 150gr · Cheddar x6 · Salsa Tasty'},
+  {id:'kids',   em:'👶', name:'Kids', badge:'Kids', stars:5, tag:'Para los chiquitos', phrase:'El sabor McDison en tamaño ideal para los más pequeños de la mesa.', s:7999, d:null, ing:'Pan con puré de papa en la masa · Blend de carne 80gr · Salsa Tasty'},
+  {id:'chicken',em:'🍗', name:'Burger Chicken', badge:null, stars:5, tag:'La reina del pollo', phrase:'Pollo jugoso, tomate fresco y barbacoa. La sorpresa del menú que más piden.', s:12499, d:null, ing:'Pan con puré de papa en la masa · Blend de pollo 180gr · Queso · Lechuga · Tomate · Huevo · Barbacoa'},
+];
+
+var POSTRES = [
+  {id:'choco', em:'🍫', name:'Choco McDison', stars:5, tag:'El cierre perfecto', phrase:'El broche de oro de tu pedido. Chocolate que te deja con una sonrisa.', price:3499},
+];
+
+var EXTRAS = [
+  {id:'ex0', em:'🍟', name:'Porción de Papas', price:5999},
+  {id:'ex1', em:'🧀', name:'Cheddar', price:1000},
+  {id:'ex2', em:'🥩', name:'Carne y Cheddar', price:2499},
+  {id:'ex3', em:'🥓', name:'Bacon', price:1499},
+  {id:'ex4', em:'🍳', name:'Huevo', price:1000},
+  {id:'ex5', em:'🥑', name:'Guacamole', price:1499},
+  {id:'ex6', em:'🍶', name:'Dips Tasty BIG BBQ', price:1000},
+];
+
+var REVIEWS = [
+  {name:'Enzo Abrego', initial:'E', color:'#8B5CF6', stars:5, date:'Hace 11 meses', text:'Muy buen lugar, riquísimas sus hamburguesas, excelente atención!! 5 estrellas', scores:'Comida: 5 | Servicio: 5 | Ambiente: 5'},
+  {name:'Silvio Maximiliano Sosa', initial:'S', color:'#059669', stars:5, date:'Hace 11 meses', text:'Buena atención y buena comida!', scores:null},
+  {name:'Vladimir Sarmiento', initial:'V', color:'#DC2626', stars:5, date:'Hace 11 meses', text:'Las hamburguesas son una locura. Volví tres veces en el mismo mes.', scores:'Comida: 5 | Servicio: 5 | Ambiente: 5'},
+  {name:'Magali Zalazar', initial:'M', color:'#2563EB', stars:5, date:'Hace 11 meses', text:'Consumo en el lugar | Cena | $8.000-10.000', scores:'Comida: 5 | Servicio: 5 | Ambiente: 5'},
+  {name:'Romina Pérez', initial:'R', color:'#D97706', stars:5, date:'Hace 8 meses', text:'La Falsa MC es de otro planeta. La pido siempre que vengo y nunca decepciona.', scores:'Comida: 5 | Servicio: 5 | Ambiente: 5'},
+  {name:'Matías Flores', initial:'M', color:'#0891B2', stars:5, date:'Hace 6 meses', text:'El pan con puré de papa en la masa es lo que los diferencia. Una genialidad.', scores:'Comida: 5 | Servicio: 5 | Ambiente: 5'},
+  {name:'Agustina Ríos', initial:'A', color:'#BE185D', stars:5, date:'Hace 4 meses', text:'Fui por el Instagram y quedé enamorada. El Grand McDison es para compartir... o no.', scores:'Comida: 5 | Servicio: 5 | Ambiente: 5'},
+  {name:'Lucas Herrera', initial:'L', color:'#7C3AED', stars:4, date:'Hace 3 meses', text:'Rica comida y atención rápida. La Tucson con guacamole es mi favorita. Muy recomendado.', scores:'Comida: 4 | Servicio: 5 | Ambiente: 4'},
+  {name:'Carla Méndez', initial:'C', color:'#065F46', stars:5, date:'Hace 2 meses', text:'El Choco McDison de postre cierra el combo de forma perfecta. ¡Una delicia total!', scores:'Comida: 5 | Servicio: 5 | Ambiente: 5'},
+  {name:'Sebastián Moreno', initial:'S', color:'#92400E', stars:5, date:'Hace 1 mes', text:'Vine de paso y terminé quedándome dos horas. La Cheese con cheddar x6 es adictiva.', scores:'Comida: 5 | Servicio: 5 | Ambiente: 5'},
+];
+
+// ====================================================================
+// CART — simple array, no DOM dependency
+// ====================================================================
+var cart = []; // [{id, name, price, em, qty}]
+
+function fmt(n){ return n.toLocaleString('es-AR'); }
+
+function starsHtml(n){
+  var s=''; for(var i=0;i<5;i++) s += i<n ? '★' : '☆'; return s;
+}
+
+function waIcon(size){
+  size = size||14;
+  return '<svg width="'+size+'" height="'+size+'" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>';
+}
+
+// ====================================================================
+// CART OPERATIONS
+// ====================================================================
+function cartAdd(itemId, name, price, em) {
+  // get qty from the specific card
+  var qtyInput = document.getElementById('qty-' + itemId);
+  var qty = qtyInput ? (parseInt(qtyInput.value) || 1) : 1;
+
+  // find existing
+  var found = false;
+  for (var i = 0; i < cart.length; i++) {
+    if (cart[i].id === itemId) {
+      cart[i].qty += qty;
+      found = true;
+      break;
+    }
+  }
+  if (!found) {
+    cart.push({id: itemId, name: name, price: price, em: em, qty: qty});
+  }
+  renderCart();
+  showToast('✅ ' + qty + '× ' + name + ' al carrito');
+}
+
+function cartRemove(itemId) {
+  for (var i = 0; i < cart.length; i++) {
+    if (cart[i].id === itemId) { cart.splice(i,1); break; }
+  }
+  renderCart();
+}
+
+function clearCart() {
+  cart = [];
+  renderCart();
+}
+
+function cartTotal() {
+  var t = 0;
+  for (var i = 0; i < cart.length; i++) t += cart[i].price * cart[i].qty;
+  return t;
+}
+
+function cartTotalQty() {
+  var t = 0;
+  for (var i = 0; i < cart.length; i++) t += cart[i].qty;
+  return t;
+}
+
+function renderCart() {
+  var totalQty = cartTotalQty();
+  var total    = cartTotal();
+
+  // FAB
+  document.getElementById('cartCnt').textContent = totalQty;
+  document.getElementById('cartFabTot').textContent = '$' + fmt(total);
+  document.getElementById('cartFloat').style.display = totalQty > 0 ? 'block' : 'none';
+
+  // Drawer
+  var wrap = document.getElementById('cartItemsWrap');
+  var ftr  = document.getElementById('cartFtr');
+
+  if (cart.length === 0) {
+    wrap.innerHTML = '<div class="cart-empty"><div class="cart-empty-ico">🛒</div><span style="font-family:\'Barlow Condensed\',sans-serif;font-size:16px;font-weight:700">Carrito vacío</span><span style="font-size:12px;color:var(--gray2)">Agregá tus favoritos del menú</span></div>';
+    ftr.style.display = 'none';
+    return;
+  }
+
+  ftr.style.display = 'flex';
+  document.getElementById('cartTotDisplay').textContent = '$' + fmt(total);
+
+  var html = '';
+  for (var i = 0; i < cart.length; i++) {
+    var item = cart[i];
+    var sub  = item.price * item.qty;
+    // use closure-safe data attributes
+    html += '<div class="cart-item-row">' +
+      '<div class="ci-em">' + item.em + '</div>' +
+      '<div class="ci-inf">' +
+        '<div class="ci-nm">' + item.name + '</div>' +
+        '<div class="ci-qt">' + item.qty + ' × $' + fmt(item.price) + '</div>' +
+      '</div>' +
+      '<div class="ci-pr">$' + fmt(sub) + '</div>' +
+      '<button class="ci-rm" data-itemid="' + item.id + '" onclick="cartRemove(this.getAttribute(\'data-itemid\'))">✕</button>' +
+    '</div>';
+  }
+  wrap.innerHTML = html;
+}
+
+// ====================================================================
+// QTY CONTROLS  (uses unique ID per item)
+// ====================================================================
+function qtyChange(itemId, delta) {
+  var inp = document.getElementById('qty-' + itemId);
+  if (!inp) return;
+  var v = parseInt(inp.value) + delta;
+  if (v < 1) v = 1;
+  if (v > 99) v = 99;
+  inp.value = v;
+}
+
+// ====================================================================
+// DIRECT WA ORDER
+// ====================================================================
+function pedirWA(itemId, name, price) {
+  var inp = document.getElementById('qty-' + itemId);
+  var qty = inp ? (parseInt(inp.value) || 1) : 1;
+  var total = price * qty;
+  var msg = '¡Hola McDison! 🍔🔥 Quiero pedir:\n\n' + qty + '× ' + name + ' — $' + fmt(total) + '\n\n¿Está disponible? ¡Gracias!';
+  window.open('https://wa.me/' + WA_NUM + '?text=' + encodeURIComponent(msg), '_blank');
+}
+
+// ====================================================================
+// SEND FULL CART
+// ====================================================================
+function sendWA() {
+  if (!cart.length) return;
+  var msg = '¡Hola McDison! 🍔🔥 Quiero hacer el siguiente pedido:\n\n';
+  var total = 0;
+  for (var i = 0; i < cart.length; i++) {
+    var item = cart[i];
+    var sub  = item.price * item.qty;
+    total   += sub;
+    msg += item.em + ' ' + item.qty + '× ' + item.name + ' — $' + fmt(sub) + '\n';
+  }
+  msg += '\n💰 *Total estimado: $' + fmt(total) + '*\n\n¡Muchas gracias! 😊';
+  window.open('https://wa.me/' + WA_NUM + '?text=' + encodeURIComponent(msg), '_blank');
+}
+
+// ====================================================================
+// OPEN/CLOSE CART
+// ====================================================================
+function openCart()  { document.getElementById('cartDrawer').classList.add('open');    document.getElementById('overlay').classList.add('show'); }
+function closeCart() { document.getElementById('cartDrawer').classList.remove('open'); document.getElementById('overlay').classList.remove('show'); }
+
+// ====================================================================
+// DESC TOGGLE
+// ====================================================================
+function toggleDesc(itemId) {
+  var desc = document.getElementById('desc-' + itemId);
+  var card = document.getElementById('card-' + itemId);
+  var open = desc.classList.toggle('open');
+  card.classList.toggle('expanded', open);
+}
+
+// ====================================================================
+// NAV
+// ====================================================================
+function goTo(id, btn) {
+  document.querySelectorAll('.nav-btn').forEach(function(b){ b.classList.remove('active'); });
+  btn.classList.add('active');
+  document.getElementById(id).scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+// ====================================================================
+// TOAST
+// ====================================================================
+function showToast(msg) {
+  var t = document.getElementById('toastEl');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(function(){ t.classList.remove('show'); }, 2300);
+}
+
+// ====================================================================
+// BUILD ITEM CARD
+// ====================================================================
+function buildCard(item, isPostre) {
+  var priceHtml = '';
+  if (!isPostre) {
+    if (item.s) priceHtml += '<div class="price-tag"><span class="price-lbl">Simple</span><span class="price-val">$' + fmt(item.s) + '</span></div>';
+    if (item.d) priceHtml += '<div class="price-tag"><span class="price-lbl">' + (item.s ? 'Doble' : 'Precio') + '</span><span class="price-val ' + (item.s?'d':'') + '">$' + fmt(item.d) + '</span></div>';
+  } else {
+    priceHtml = '<div class="price-tag"><span class="price-lbl">Precio</span><span class="price-val">$' + fmt(item.price) + '</span></div>';
+  }
+  var mainPrice = isPostre ? item.price : (item.s || item.d);
+  var badgeHtml = item.badge ? '<span class="item-badge">' + item.badge + '</span>' : '';
+  if (isPostre) badgeHtml = '<span class="item-badge" style="background:var(--dark4);color:var(--yellow);border:1px solid rgba(245,197,24,.3)">Postre</span>';
+
+  var starsStr = starsHtml(item.stars);
+
+  return '<div class="item-card" id="card-' + item.id + '">' +
+    '<div class="item-top">' +
+      '<div class="item-emoji">' + item.em + '</div>' +
+      '<div class="item-info">' +
+        '<div class="item-name">' + item.name + badgeHtml + '</div>' +
+        '<div class="item-price-row">' + priceHtml + '</div>' +
+      '</div>' +
+      '<button class="expand-btn" onclick="toggleDesc(\'' + item.id + '\')">' +
+        'Ver <i class="chev">▾</i>' +
+      '</button>' +
+    '</div>' +
+    '<div class="item-desc" id="desc-' + item.id + '">' +
+      '<div class="item-desc-inner">' +
+        '<div class="desc-rating">' +
+          '<span class="desc-stars">' + starsStr + '</span>' +
+          '<span class="desc-tag">' + item.tag + '</span>' +
+        '</div>' +
+        '<div class="desc-phrase">"' + item.phrase + '"</div>' +
+        (item.ing ? '<div class="ingr"><strong>Ingredientes:</strong> ' + item.ing + '</div>' : '') +
+      '</div>' +
+    '</div>' +
+    '<div class="item-actions">' +
+      '<div class="qty-ctrl">' +
+        '<button class="qty-btn" onclick="qtyChange(\'' + item.id + '\',-1)">−</button>' +
+        '<input class="qty-val" id="qty-' + item.id + '" value="1" readonly>' +
+        '<button class="qty-btn" onclick="qtyChange(\'' + item.id + '\',1)">+</button>' +
+      '</div>' +
+      '<button class="btn-cart" onclick="cartAdd(\'' + item.id + '\',\'' + item.name.replace(/'/g,"\\'") + '\',' + mainPrice + ',\'' + item.em + '\')">🛒 Carrito</button>' +
+      '<button class="btn-pedir" onclick="pedirWA(\'' + item.id + '\',\'' + item.name.replace(/'/g,"\\'") + '\',' + mainPrice + ')">' + waIcon(14) + ' Pedir YA</button>' +
+    '</div>' +
+  '</div>';
+}
+
+function buildExtraItem(ex) {
+  return '<div class="extra-item">' +
+    '<div class="extra-icon">' + ex.em + '</div>' +
+    '<div class="extra-txt">' +
+      '<div class="extra-name">' + ex.name + '</div>' +
+      '<div class="extra-price">$' + fmt(ex.price) + '</div>' +
+    '</div>' +
+    '<div class="extra-right">' +
+      '<div class="qty-ctrl">' +
+        '<button class="qty-btn" onclick="qtyChange(\'' + ex.id + '\',-1)">−</button>' +
+        '<input class="qty-val" id="qty-' + ex.id + '" value="1" readonly>' +
+        '<button class="qty-btn" onclick="qtyChange(\'' + ex.id + '\',1)">+</button>' +
+      '</div>' +
+      '<button class="btn-cart-sm" onclick="cartAdd(\'' + ex.id + '\',\'' + ex.name.replace(/'/g,"\\'") + '\',' + ex.price + ',\'' + ex.em + '\')">🛒</button>' +
+    '</div>' +
+  '</div>';
+}
+
+function buildReviewCard(rv) {
+  var stars = '';
+  for (var i=0;i<5;i++) stars += i < rv.stars ? '★' : '☆';
+  return '<div class="review-card">' +
+    '<div class="rv-header">' +
+      '<div class="rv-avatar" style="background:' + rv.color + '">' + rv.initial + '</div>' +
+      '<div><div class="rv-name">' + rv.name + '</div><div class="rv-date">' + rv.date + '</div></div>' +
+    '</div>' +
+    '<div class="rv-stars">' + stars + '</div>' +
+    '<div class="rv-text">' + rv.text + '</div>' +
+    (rv.scores ? '<div class="rv-scores">' + rv.scores + '</div>' : '') +
+  '</div>';
+}
+
+// ====================================================================
+// RENDER ALL
+// ====================================================================
+var burgerHTML = '';
+for (var i=0;i<BURGERS.length;i++) burgerHTML += buildCard(BURGERS[i], false);
+document.getElementById('burger-list').innerHTML = burgerHTML;
+
+var postreHTML = '';
+for (var i=0;i<POSTRES.length;i++) postreHTML += buildCard(POSTRES[i], true);
+document.getElementById('postre-list').innerHTML = postreHTML;
+
+var extrasHTML = '';
+for (var i=0;i<EXTRAS.length;i++) extrasHTML += buildExtraItem(EXTRAS[i]);
+document.getElementById('extras-list').innerHTML = extrasHTML;
+
+// Reviews — duplicate for infinite scroll
+var rvHTML = '';
+var allRv = REVIEWS.concat(REVIEWS); // duplicate
+for (var i=0;i<allRv.length;i++) rvHTML += buildReviewCard(allRv[i]);
+document.getElementById('reviewsTrack').innerHTML = rvHTML;
+
+// Initial cart render
+renderCart();
+</script>
+</body>
+</html>
